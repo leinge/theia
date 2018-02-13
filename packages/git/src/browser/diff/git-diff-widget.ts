@@ -5,9 +5,7 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { injectable, inject } from "inversify";
 import { h } from "@phosphor/virtualdom";
-import { GIT_DIFF } from "./git-diff-contribution";
 import { DiffUris } from '@theia/editor/lib/browser/diff-uris';
 import { VirtualRenderer, open, OpenerService, StatefulWidget, SELECTED_CLASS } from "@theia/core/lib/browser";
 import { GIT_RESOURCE_SCHEME } from '../git-resource';
@@ -16,18 +14,21 @@ import { GitFileChange, GitFileStatus, Git } from '../../common';
 import { GitBaseWidget, GitFileChangeNode } from "../git-base-widget";
 import { DiffNavigatorProvider, DiffNavigator } from "@theia/editor/lib/browser/diff-navigator";
 import { EditorManager } from "@theia/editor/lib/browser";
+import { inject, injectable } from "inversify";
 
+export const GIT_DIFF = "git-diff";
 @injectable()
 export class GitDiffWidget extends GitBaseWidget<GitFileChangeNode> implements StatefulWidget {
 
     protected fileChangeNodes: GitFileChangeNode[];
     protected options: Git.Options.Diff;
 
-    constructor(
-        @inject(Git) protected readonly git: Git,
-        @inject(DiffNavigatorProvider) protected diffNavigatorProvider: DiffNavigatorProvider,
-        @inject(OpenerService) protected openerService: OpenerService,
-        @inject(EditorManager) protected editorManager: EditorManager) {
+    @inject(Git) protected readonly git: Git;
+    @inject(DiffNavigatorProvider) protected readonly diffNavigatorProvider: DiffNavigatorProvider;
+    @inject(OpenerService) protected readonly openerService: OpenerService;
+    @inject(EditorManager) protected readonly editorManager: EditorManager;
+
+    constructor() {
         super();
         this.id = GIT_DIFF;
         this.scrollContainer = "git-diff-list-container";
@@ -134,7 +135,6 @@ export class GitDiffWidget extends GitBaseWidget<GitFileChangeNode> implements S
 
     protected renderFileChangeList(): h.Child {
         const files: h.Child[] = [];
-
         for (const fileChange of this.fileChangeNodes) {
             const fileChangeElement: h.Child = this.renderGitItem(fileChange);
             files.push(fileChangeElement);
@@ -260,6 +260,10 @@ export class GitDiffWidget extends GitBaseWidget<GitFileChangeNode> implements S
 
     protected openFile(change: GitFileChange) {
         const uriToOpen = this.getUriToOpen(change);
+        this.doOpen(uriToOpen);
+    }
+
+    protected doOpen(uriToOpen: URI) {
         open(this.openerService, uriToOpen, { mode: 'reveal' });
     }
 }

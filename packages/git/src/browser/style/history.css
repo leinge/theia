@@ -24,9 +24,16 @@
     padding: 0 8px 0 2px;
 }
 
+.theia-git .commitListElement .containerHead .headContent .image-container{
+    margin-right: 5px;
+}
+
+.theia-git .commitListElement .containerHead .headContent .image-container img{
+    width: 27px;
+}
+
 .theia-git .commitListElement .containerHead .headContent .headLabelContainer{
-    width: calc(100% - 40px);
-    min-width: calc(100% - 40px);
+    min-width: calc(100% - 93px);
 }
 
 .theia-git .commitListElement .containerHead .headContent .headLabelContainer.singleFileMode{
@@ -36,6 +43,17 @@
 .theia-git .commitListElement .containerHead .headContent .expansionToggle{
     display: flex;
     align-items: center;
+}
+
+.theia-git .commitListElement .containerHead .headContent .detailButton{
+    display: flex;
+    align-items: center;
+    visibility: hidden;
+    margin: 0 5px;
+}
+
+.theia-git .commitListElement .containerHead:hover .headContent .detailButton {
+    visibility: visible;
 }
 
 .theia-git .commitListElement .containerHead .headContent .expansionToggle > .toggle{
@@ -113,4 +131,40 @@
       bottom: -80px  ;
     }
   }
-  
+
+.theia-git .git-diff-container .subject {
+    font-size: var(--theia-ui-font-size2);
+    font-weight: bold;
+}
+
+.theia-git .git-diff-container .commit-info {
+    padding-left: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.theia-git .git-diff-container .commit-info-row {
+    align-items: center;
+    margin-top: 10px;
+}
+
+.theia-git .commit-info .header-row {
+    margin: 4px 0;
+}
+
+.theia-git .commit-info .header-row .theia-header {
+    margin: 1px 0;
+}
+
+.theia-git .commit-info .header-row .header-value {
+    margin: 0 0 0 5px;
+}
+
+.theia-git .commit-info-row .image-container {
+    display: flex;
+}
+
+.tab-git-icon {
+    width: 20px!important;
+    height: 20px;
+}
