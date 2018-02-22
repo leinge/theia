@@ -20,6 +20,7 @@ export interface NotificationProperties {
     icon: string;
     text: string;
     actions?: NotificationAction[];
+    timeout: number;
 }
 
 export interface Notification {
@@ -29,6 +30,7 @@ export interface Notification {
 
 export class Notifications {
 
+    private closeTimer: any;
     protected container: Element;
 
     constructor(protected parent?: Element) {
@@ -72,7 +74,16 @@ export class Notifications {
                 button.addEventListener('click', () => {
                     action.fn(handler);
                     close();
+                    clearTimeout(this.closeTimer);
                 });
+            }
+            if (properties.timeout !== undefined && properties.timeout > 0) {
+                this.closeTimer = setTimeout(() => {
+                    if (this.closeTimer !== undefined) {
+                        close();
+                    }
+                }, properties.timeout);
+
             }
         }
         return fragment;
