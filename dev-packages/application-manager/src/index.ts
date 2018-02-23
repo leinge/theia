@@ -5,6 +5,5 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-export * from './npm-registry';
-export * from './extension-package';
-export * from './application-package';
+export * from './rebuild';
+export * from './application-package-manager';
