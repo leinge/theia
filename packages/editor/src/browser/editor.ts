@@ -11,6 +11,7 @@ import URI from "@theia/core/lib/common/uri";
 import { Event, Disposable } from '@theia/core/lib/common';
 import { Saveable } from '@theia/core/lib/browser';
 import { DecorationOptions } from './editor-decorations-service';
+import { UriSelection } from '@theia/core/lib/common/selection-service';
 
 export {
     Position, Range
@@ -44,7 +45,7 @@ export interface TextEditor extends Disposable, TextEditorSelection {
     revealRange(range: Range, options?: RevealRangeOptions): void;
 
     /**
-     * Rerender the editor.
+     * Re-renders the editor.
      */
     refresh(): void;
     /**
@@ -66,10 +67,19 @@ export interface Dimension {
     height: number;
 }
 
-export interface TextEditorSelection {
-    uri: URI
+export interface TextEditorSelection extends UriSelection {
     cursor?: Position
     selection?: Range
+}
+export namespace TextEditorSelection {
+    // tslint:disable-next-line:no-any
+    export function is(arg: any): arg is TextEditorSelection {
+        return UriSelection.is(arg);
+    }
+}
+
+export namespace TextEditorSelection {
+    export const ID = 'text-editor-selection';
 }
 
 export interface RevealPositionOptions {
@@ -85,10 +95,4 @@ export interface SetDecorationParams {
     uri: string;
     type: string;
     options: DecorationOptions[];
-}
-
-export namespace TextEditorSelection {
-    export function is(e: any): e is TextEditorSelection {
-        return e && e["uri"] instanceof URI;
-    }
 }

@@ -8,7 +8,8 @@
 import { injectable, inject } from "inversify";
 import URI from '@theia/core/lib/common/uri';
 import { ITreeNode, ICompositeTreeNode, ISelectableTreeNode, IExpandableTreeNode, Tree } from "@theia/core/lib/browser";
-import { FileSystem, FileStat, UriSelection } from "../../common";
+import { FileSystem, FileStat } from "../../common";
+import { UriSelection } from '@theia/core/lib/common/selection-service';
 import { LabelProvider } from "@theia/core/lib/browser/label-provider";
 
 @injectable()

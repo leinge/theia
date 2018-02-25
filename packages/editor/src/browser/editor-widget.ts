@@ -5,9 +5,9 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { SelectionService } from '@theia/core/lib/common';
+import { SelectionService, SelectionContext } from '@theia/core/lib/common';
 import { Widget, BaseWidget, Message, Saveable, SaveableSource } from '@theia/core/lib/browser';
-import { TextEditor } from "./editor";
+import { TextEditor, TextEditorSelection } from "./editor";
 
 export class EditorWidget extends BaseWidget implements SaveableSource {
 
@@ -19,7 +19,7 @@ export class EditorWidget extends BaseWidget implements SaveableSource {
         this.toDispose.push(this.editor);
         this.editor.onSelectionChanged(() => {
             if (this.editor.isFocused()) {
-                this.selectionService.selection = this.editor;
+                this.setSelection(this.editor);
             }
         });
     }
@@ -31,7 +31,7 @@ export class EditorWidget extends BaseWidget implements SaveableSource {
     protected onActivateRequest(msg: Message): void {
         super.onActivateRequest(msg);
         this.editor.focus();
-        this.selectionService.selection = this.editor;
+        this.setSelection(this.editor);
     }
 
     protected onAfterAttach(msg: Message): void {
@@ -52,6 +52,11 @@ export class EditorWidget extends BaseWidget implements SaveableSource {
         } else {
             this.editor.setSize(msg);
         }
+    }
+
+    protected setSelection(selection: TextEditor): void {
+        SelectionContext.setSelectionSource(selection, TextEditorSelection.ID);
+        this.selectionService.selection = selection;
     }
 
 }

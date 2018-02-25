@@ -15,7 +15,7 @@ import { h } from "@phosphor/virtualdom/lib";
 import { DiagnosticSeverity } from 'vscode-languageserver-types';
 import { Message } from '@phosphor/messaging';
 import URI from '@theia/core/lib/common/uri';
-import { UriSelection } from '@theia/filesystem/lib/common';
+import { UriSelection } from '@theia/core/lib/common/selection-service';
 
 @injectable()
 export class ProblemWidget extends TreeWidget {

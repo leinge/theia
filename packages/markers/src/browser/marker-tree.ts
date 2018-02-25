@@ -9,7 +9,7 @@ import { injectable } from "inversify";
 import { Tree, ICompositeTreeNode, ITreeNode, ISelectableTreeNode, IExpandableTreeNode } from "@theia/core/lib/browser";
 import { MarkerManager } from './marker-manager';
 import { Marker } from '../common/marker';
-import { UriSelection } from "@theia/filesystem/lib/common";
+import { UriSelection } from "@theia/core/lib/common/selection-service";
 import URI from "@theia/core/lib/common/uri";
 import { LabelProvider } from "@theia/core/lib/browser/label-provider";
 

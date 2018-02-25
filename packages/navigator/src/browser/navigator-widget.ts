@@ -9,11 +9,11 @@ import { injectable, inject } from "inversify";
 import { Message } from "@phosphor/messaging";
 import URI from "@theia/core/lib/common/uri";
 import { CommandService } from '@theia/core/lib/common/command';
-import { ContextMenuRenderer, TreeProps, ITreeModel, ITreeNode } from '@theia/core/lib/browser';
+import { ContextMenuRenderer, TreeProps, ITreeModel, ITreeNode, ISelectableTreeNode } from '@theia/core/lib/browser';
 import { FileTreeWidget, DirNode } from "@theia/filesystem/lib/browser";
 import { FileNavigatorModel } from "./navigator-model";
 import { WorkspaceCommands } from '@theia/workspace/lib/browser/workspace-frontend-contribution';
-import { SelectionService } from '@theia/core/lib/common';
+import { SelectionService, SelectionContext } from '@theia/core/lib/common';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import { LabelProvider } from '@theia/core/lib/browser/label-provider';
 import { h } from "@phosphor/virtualdom/lib";
@@ -25,6 +25,10 @@ export const FILE_STAT_ICON_CLASS = 'theia-FileStatIcon';
 export const FILE_NAVIGATOR_ID = 'files';
 export const LABEL = 'Files';
 export const CLASS = 'theia-Files';
+
+export namespace FileNavigatorSelection {
+    export const ID = 'file-navigator-selection';
+}
 
 @injectable()
 export class FileNavigatorWidget extends FileTreeWidget {
@@ -46,10 +50,7 @@ export class FileNavigatorWidget extends FileTreeWidget {
     }
 
     protected initialize(): void {
-        this.model.onSelectionChanged(selection =>
-            this.selectionService.selection = selection
-        );
-
+        this.model.onSelectionChanged(selection => this.setSelection(selection));
         this.workspaceService.root.then(async resolvedRoot => {
             if (resolvedRoot) {
                 const uri = new URI(resolvedRoot.uri);
@@ -63,6 +64,7 @@ export class FileNavigatorWidget extends FileTreeWidget {
     }
 
     protected deflateForStorage(node: ITreeNode): object {
+        // tslint:disable-next-line:no-any
         const copy = Object.assign({}, node) as any;
         if (copy.uri) {
             copy.uri = copy.uri.toString();
@@ -70,6 +72,7 @@ export class FileNavigatorWidget extends FileTreeWidget {
         return super.deflateForStorage(copy);
     }
 
+    // tslint:disable-next-line:no-any
     protected inflateFromStorage(node: any, parent?: ITreeNode): ITreeNode {
         if (node.uri) {
             node.uri = new URI(node.uri);
@@ -120,6 +123,13 @@ export class FileNavigatorWidget extends FileTreeWidget {
         }, 'Open Workspace');
         const buttonContainer = h.div({ className: 'open-workspace-button-container' }, button);
         return h.div({ className: 'theia-navigator-container' }, 'You have not yet opened a workspace.', buttonContainer);
+    }
+
+    protected setSelection(selection: Readonly<ISelectableTreeNode> | undefined): void {
+        if (selection) {
+            SelectionContext.setSelectionSource(selection, FileNavigatorSelection.ID);
+        }
+        this.selectionService.selection = selection;
     }
 
 }

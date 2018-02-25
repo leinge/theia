@@ -12,7 +12,7 @@ import { Command, CommandContribution, CommandHandler, CommandRegistry } from '@
 import { MenuContribution, MenuModelRegistry } from '@theia/core/lib/common/menu';
 import { CommonMenus } from "@theia/core/lib/browser/common-frontend-contribution";
 import { FileSystem, FileStat } from '@theia/filesystem/lib/common/filesystem';
-import { UriSelection } from '@theia/filesystem/lib/common/filesystem-selection';
+import { UriSelection } from '@theia/core/lib/common/selection-service';
 import { SingleTextInputDialog, ConfirmDialog } from "@theia/core/lib/browser/dialogs";
 import { OpenerService, OpenHandler, open, FrontendApplication } from "@theia/core/lib/browser";
 import { WorkspaceService } from './workspace-service';
