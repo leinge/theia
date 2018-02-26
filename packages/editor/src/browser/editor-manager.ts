@@ -5,9 +5,9 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { injectable, postConstruct, } from "inversify";
+import { injectable, postConstruct, inject, } from "inversify";
 import URI from "@theia/core/lib/common/uri";
-import { RecursivePartial, Emitter, Event } from '@theia/core/lib/common';
+import { RecursivePartial, Emitter, Event, SelectionService, SelectionContext, UriSelection } from '@theia/core/lib/common';
 import { WidgetOpenHandler, WidgetOpenerOptions } from "@theia/core/lib/browser";
 import { EditorWidget } from "./editor-widget";
 import { Range, Position } from "./editor";
@@ -36,12 +36,20 @@ export class EditorManager extends WidgetOpenHandler<EditorWidget> {
      */
     readonly onCurrentEditorChanged: Event<EditorWidget | undefined> = this.onCurrentEditorChangedEmitter.event;
 
+    @inject(SelectionService)
+    protected readonly selectionService: SelectionService;
+
     @postConstruct()
     protected init(): void {
         super.init();
         this.shell.activeChanged.connect(() => this.updateActiveEditor());
         this.shell.currentChanged.connect(() => this.updateCurrentEditor());
         this.onCreated(widget => widget.disposed.connect(() => this.updateCurrentEditor()));
+        this.selectionService.onSelectionChanged(s => {
+            if ('text-editor-selection' === SelectionContext.getSelectionSource(s) && UriSelection.is(s)) {
+
+            }
+        });
     }
 
     protected _activeEditor: EditorWidget | undefined;

@@ -13,7 +13,7 @@ import { ContextMenuRenderer, TreeProps, ITreeModel, ITreeNode, ISelectableTreeN
 import { FileTreeWidget, DirNode } from "@theia/filesystem/lib/browser";
 import { FileNavigatorModel } from "./navigator-model";
 import { WorkspaceCommands } from '@theia/workspace/lib/browser/workspace-frontend-contribution';
-import { SelectionService, SelectionContext } from '@theia/core/lib/common';
+import { SelectionService, SelectionContext, UriSelection } from '@theia/core/lib/common';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import { LabelProvider } from '@theia/core/lib/browser/label-provider';
 import { h } from "@phosphor/virtualdom/lib";
@@ -26,8 +26,18 @@ export const FILE_NAVIGATOR_ID = 'files';
 export const LABEL = 'Files';
 export const CLASS = 'theia-Files';
 
+export interface FileNavigatorSelection extends UriSelection, Readonly<ISelectableTreeNode> {
+}
 export namespace FileNavigatorSelection {
     export const ID = 'file-navigator-selection';
+    export function wrap(selection: Readonly<ISelectableTreeNode>): FileNavigatorSelection {
+        return {
+            ...selection,
+            get uri() {
+                return new URI(selection.id);
+            }
+        };
+    }
 }
 
 @injectable()
@@ -126,10 +136,11 @@ export class FileNavigatorWidget extends FileTreeWidget {
     }
 
     protected setSelection(selection: Readonly<ISelectableTreeNode> | undefined): void {
-        if (selection) {
-            SelectionContext.setSelectionSource(selection, FileNavigatorSelection.ID);
+        const wrapped = selection ? FileNavigatorSelection.wrap(selection) : selection;
+        if (wrapped) {
+            SelectionContext.setSelectionSource(wrapped, FileNavigatorSelection.ID);
         }
-        this.selectionService.selection = selection;
+        this.selectionService.selection = wrapped;
     }
 
 }

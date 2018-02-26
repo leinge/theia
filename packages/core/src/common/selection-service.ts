@@ -88,7 +88,10 @@ export namespace SelectionContext {
     /**
      * Returns with the selection source, if any.
      */
-    export function getSelectionSource(selection: Selection): any | undefined {
+    export function getSelectionSource(selection: Selection | undefined): any | undefined {
+        if (selection === undefined) {
+            return undefined;
+        }
         const context = getSelectionContext(selection);
         if (context === undefined) {
             return undefined;
