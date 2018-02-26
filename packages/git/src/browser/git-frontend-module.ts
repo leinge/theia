@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 TypeFox and others.
+ * Copyright (C) 2018 TypeFox and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -25,6 +25,7 @@ import { GitUriLabelProviderContribution } from './git-uri-label-contribution';
 import { NavigatorTreeDecorator } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GitDecorator } from './git-decorator';
 import { bindGitDecorationsPreferences } from './git-decorator-preferences';
+import { bindDirtyDiff } from './dirty-diff/dirty-diff-module';
 import { GitRepositoryTracker } from './git-repository-tracker';
 
 import '../../src/browser/style/index.css';
@@ -33,6 +34,7 @@ export default new ContainerModule(bind => {
     bindGitDecorationsPreferences(bind);
     bindGitDiffModule(bind);
     bindGitHistoryModule(bind);
+    bindDirtyDiff(bind);
     bind(GitRepositoryTracker).toSelf().inSingletonScope();
     bind(GitWatcherServerProxy).toDynamicValue(context => WebSocketConnectionProvider.createProxy(context.container, GitWatcherPath)).inSingletonScope();
     bind(GitWatcherServer).to(ReconnectingGitWatcherServer).inSingletonScope();
